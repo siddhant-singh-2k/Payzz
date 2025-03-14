@@ -12,3 +12,22 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+
+model User {
+  id String  @id @default(uuid())
+  email String @unique
+  password String
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  refresh_Token Refresh_tokens[]
+}
+
+model Refresh_tokens {
+  id String @id @default(uuid())
+  token String @unique
+  userid String @unique
+  user User @relation(fields: [userid], references: [id], onDelete: Cascade)
+  expriesAt DateTime
+  created_at DateTime @default(now())
+}
