@@ -2,10 +2,9 @@ import { NextRequest, NextResponse } from "next/server";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import { PrismaClient } from "@prisma/client";
-import { error } from "console";
+
 require("dotenv").config();
 const jwtsecret = process.env.JWT_SECRET;
-
 const prisma = new PrismaClient();
 
 export async function POST(req: NextRequest) {
@@ -54,8 +53,18 @@ export async function POST(req: NextRequest) {
         expriesAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
       },
     });
-    console.log(access_token, refresh_token);
-    return NextResponse.json({ access_token, refresh_token });
+
+    const response = NextResponse.json({
+      message: "User signup successful",
+      access_token,
+    });
+    response.cookies.set("refresh_token", refresh_token, {
+      httpOnly: true,
+      path: "/",
+      maxAge: 7 * 24 * 60 * 60, // 7 days in seconds
+    });
+
+    return response;
   } catch (error) {
     console.error("Signup Error:", error);
     return NextResponse.json(
