@@ -6,6 +6,7 @@ import jwt from "jsonwebtoken";
 import { NEXT_HMR_REFRESH_HEADER } from "next/dist/client/components/app-router-headers";
 const jwtsecret = process.env.JWT_SECRET;
 
+
 export async function POST(req: NextRequest) {
   try {
     const { email, password } = await req.json();
@@ -24,7 +25,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ message: "User doesn't exist" });
     }
 
-    const correct_password = bcrypt.compare(password, existinguser.password);
+    const correct_password = await bcrypt.compare(password, existinguser.password);
     if (!correct_password) {
       return NextResponse.json(
         { message: "Invalid passworde" },
