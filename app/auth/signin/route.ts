@@ -41,7 +41,7 @@ export async function POST(req: NextRequest) {
       expiresIn: "7d",
     });
 
-    await prisma.refresh_tokens.delete({
+    await prisma.refresh_tokens.deleteMany({
       where: {
         userid: existinguser.id,
       },
@@ -60,7 +60,7 @@ export async function POST(req: NextRequest) {
       access_token,
     });
 
-    response.cookies.set("refresh_toke", refresh_token, {
+    response.cookies.set("refresh_token", refresh_token, {
       httpOnly: true,
       path: "/",
       maxAge: 7 * 24 * 60 * 60, // 7 days in seconds

@@ -3,7 +3,6 @@ import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import { PrismaClient } from "@prisma/client";
 
-require("dotenv").config();
 const jwtsecret = process.env.JWT_SECRET;
 const prisma = new PrismaClient();
 
