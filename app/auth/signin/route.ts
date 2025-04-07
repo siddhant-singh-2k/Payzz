@@ -3,8 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcrypt";
 const prisma = new PrismaClient();
 import jwt from "jsonwebtoken";
-import { NEXT_HMR_REFRESH_HEADER } from "next/dist/client/components/app-router-headers";
-import { tree } from "next/dist/build/templates/app-page";
+
 const jwtsecret = process.env.JWT_SECRET;
 
 export async function POST(req: NextRequest) {
@@ -31,11 +30,10 @@ export async function POST(req: NextRequest) {
     );
     if (!correct_password) {
       return NextResponse.json(
-        { message: "Invalid passworde" },
+        { message: "Invalid password" },
         { status: 400 }
       );
     }
-
 
     const access_token = jwt.sign({ email: existinguser.email }, jwtsecret!, {
       expiresIn: "15m",
@@ -51,7 +49,6 @@ export async function POST(req: NextRequest) {
       },
     });
 
-
     await prisma.refresh_tokens.create({
       data: {
         token: refresh_token,
@@ -66,25 +63,18 @@ export async function POST(req: NextRequest) {
       refresh_token,
     });
 
-    // response.cookies.set("refresh_token", refresh_token, {
-    //   httpOnly: true,
-    //   path: "/",
-    //   maxAge: 7 * 24 * 60 * 60, // 7 days in seconds
-    // });
 
-    response.cookies.set('refresh_token',refresh_token,{
-      httpOnly:true,
+    response.cookies.set("refresh_token", refresh_token, {
+      httpOnly: true,
       path: "/",
       maxAge: 7 * 24 * 60 * 60, // 7 days in seconds
-    })
-
+    });
 
     return response;
-
   } catch (error) {
     console.error("Signin error", error);
     return NextResponse.json(
-      { message: "Something went wrong while sign up" },
+      { message: "Something went wrong while sign in" },
       { status: 500 }
     );
   }

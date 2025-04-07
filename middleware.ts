@@ -4,7 +4,7 @@ export default function middleware(req:NextRequest){
 
     const created = req.cookies.get("refresh_token")
     if (!created) {
-        return NextResponse.json({message:"Not valid middle"})
+        return NextResponse.json({message:"Not valid token"})
 
     }
 
