@@ -31,10 +31,10 @@ export default function Home() {
         </div>
         <div className="flex space-x-4">
           <Link href='/signin'>
-          <button className="px-6 py-2 rounded-full bg-blue-600 hover:bg-blue-500 transition">Sign In</button>
+            <button className="px-6 py-2 rounded-full bg-blue-600 hover:bg-blue-500 transition">Sign In</button>
           </Link>
           <Link href='/signup'>
-          <button className="px-6 py-2 rounded-full bg-purple-600 hover:bg-purple-500 transition">Sign Up</button>
+            <button className="px-6 py-2 rounded-full bg-purple-600 hover:bg-purple-500 transition">Sign Up</button>
           </Link>
         </div>
       </nav>

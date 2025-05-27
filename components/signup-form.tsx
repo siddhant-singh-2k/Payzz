@@ -1,3 +1,7 @@
+"use client"
+import { useState } from "react"
+import axios from "axios"
+import { useRouter } from "next/navigation"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import {
@@ -10,11 +14,50 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import NextLink from "next/link";
+import { AwardIcon } from "lucide-react"
+
+
+
 
 export function SignupForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
+
+  const router = useRouter();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [message, setMessage] = useState("");
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError("");
+    setMessage("");
+
+    try {
+      const res = await axios.post("/auth/signup", {
+        email,
+        password,
+      });
+
+      const data = res.data;
+
+      setMessage(data.message || "Signup successfull");
+      setTimeout(()=>{
+        router.push("/signin");
+      },2000);
+    
+    }
+
+    catch (err: any) {
+      setError(err.response?.data?.error || "signup failed");
+    }
+
+  };
+
+
+
   return (
     <div className={cn("flex flex-col gap-6 min-h-screen bg-gray-950", className)} {...props}>
       <div className="fixed inset-0 bg-gray-950" />
@@ -26,32 +69,28 @@ export function SignupForm({
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <form>
+            <form onSubmit={handleSubmit}>
               <div className="flex flex-col gap-6">
                 <div className="grid gap-3">
                   <Label htmlFor="email" className="text-gray-300">Email</Label>
                   <Input
                     id="email"
                     type="email"
-                    placeholder="m@example.com"
+                    placeholder="siddhant@gmail.com"
                     required
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
                     className="bg-gray-800 border-gray-700 text-white focus:border-blue-500 focus:ring-blue-500"
                   />
                 </div>
                 <div className="grid gap-3">
-                  {/* <div className="flex items-center">
-                    <Label htmlFor="password" className="text-gray-300">Password</Label>
-                    <a
-                      href="#"
-                      className="ml-auto inline-block text-sm text-blue-400 underline-offset-4 hover:text-blue-300 hover:underline"
-                    >
-                      Forgot your password?
-                    </a>
-                  </div> */}
+
                   <Input
                     id="password"
                     type="password"
                     required
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
                     className="bg-gray-800 border-gray-700 text-white focus:border-blue-500 focus:ring-blue-500"
                   />
                 </div>
@@ -62,14 +101,11 @@ export function SignupForm({
                   >
                     Signup
                   </Button>
+                  {error && <p className="text-red-400 text-sm mt-2">{error}</p>}
+                  {message && <p className="text-green-400 text-sm mt-2">{message}</p>}
                 </div>
               </div>
-              {/* <div className="mt-4 text-center text-sm text-gray-400">
-                Don&apos;t have an account?{" "}
-                <NextLink href="/signup" className="text-blue-400 hover:text-blue-300 underline underline-offset-4">
-                  Sign up
-                </NextLink>
-              </div> */}
+
             </form>
           </CardContent>
         </Card>
